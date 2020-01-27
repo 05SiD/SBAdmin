@@ -1,0 +1,98 @@
+<p-table #dt [columns]="cols" [value]="cars" [paginator]="true" [rows]="10">
+  <ng-template pTemplate="caption">
+      <div style="text-align: right">        
+          <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+          <input type="text" pInputText size="50" placeholder="Global Filter" (input)="dt.filterGlobal($event.target.value, 'contains')" style="width:auto">
+      </div>
+  </ng-template>
+  <ng-template pTemplate="header" let-columns>
+      <tr>
+          <th *ngFor="let col of columns">
+              {{col.header}}
+          </th>
+      </tr>
+      <tr>
+          <th *ngFor="let col of columns" [ngSwitch]="col.field">
+              <input *ngSwitchCase="'vin'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+              <div *ngSwitchCase="'year'">
+                  Value > {{yearFilter}}
+                  <i class="fa fa-close" (click)="yearFilter=null;dt.filter(null, col.field, col.filterMatchMode)" style="cursor:pointer" *ngIf="yearFilter"></i>
+                  <p-slider [style]="{'width':'100%','margin-top':'8px'}" [(ngModel)]="yearFilter" [min]="1970" [max]="2010" (onChange)="onYearChange($event, dt)"></p-slider>
+              </div>
+              <p-dropdown *ngSwitchCase="'brand'" [options]="brands" [style]="{'width':'100%'}" (onChange)="dt.filter($event.value, col.field, 'equals')"></p-dropdown>
+              <p-multiSelect *ngSwitchCase="'color'" [options]="colors" defaultLabel="All Colors" (onChange)="dt.filter($event.value, col.field, 'in')"></p-multiSelect>
+              <input *ngSwitchCase="'price'" pInputText type="text" placeholder="Custom - Greater Than" (input)="dt.filter($event.target.value, col.field, 'custom')">
+          </th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+          <td *ngFor="let col of columns">
+              {{rowData[col.field]}}
+          </td>
+      </tr>
+  </ng-template>
+</p-table>
+
+<br><br><br><br>
+
+<h3>Row Editing</h3>
+<p-table [value]="cars2" dataKey="vin" editMode="row">
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Vin</th>
+          <th>Year</th>
+          <th>Brand</th>
+          <th>Color</th>
+          <th style="width:8em"></th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowData let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="rowData">
+          <td>
+              {{rowData.vin}}
+          </td>
+          <td>
+              <p-cellEditor>
+                  <ng-template pTemplate="input">
+                      <input pInputText type="text" [(ngModel)]="rowData.year" required>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                      {{rowData.year}}
+                  </ng-template>
+              </p-cellEditor>
+          </td>
+          <td>
+              <p-cellEditor>
+                  <ng-template pTemplate="input">
+                      <p-dropdown [options]="brands" [(ngModel)]="rowData.brand" [style]="{'width':'100%'}"></p-dropdown>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                      {{rowData.brand}}
+                  </ng-template>
+              </p-cellEditor>
+          </td>
+          <td>
+              <p-cellEditor>
+                  <ng-template pTemplate="input">
+                      <input pInputText type="text" [(ngModel)]="rowData.color">
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                      {{rowData.color}}
+                  </ng-template>
+              </p-cellEditor>
+          </td>
+          <td style="text-align:center">
+              <button *ngIf="!editing" pButton type="button" pInitEditableRow class="btn btn-sm btn-primary" (click)="onRowEditInit(rowData)">
+                <span class="fa fa-edit"></span>
+              </button>
+              <button *ngIf="editing" pButton type="button" pSaveEditableRow class="btn btn-sm btn-success" style="margin-right: .5em" (click)="onRowEditSave(rowData)">
+                <span class="fa fa-check"></span>
+              </button>
+              <button *ngIf="editing" pButton type="button" pCancelEditableRow class="btn btn-sm btn-danger" (click)="onRowEditCancel(rowData, ri)">
+                <span class="fa fa-times"></span>
+              </button>
+          </td>
+      </tr>
+  </ng-template>
+</p-table>

@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-xl-3 col-lg-6">
+        <a routerLink="/home/cars" [routerLinkActive]="['router-link-active']">
+            <app-token [bgClass]="'primary'" [icon]="'fa-car'" [count]="26" [label]="'Cars'" [@pulse]></app-token>
+        </a>
+    </div>
+    <div class="col-xl-3 col-lg-6">
+        <a routerLink="/home/trips" [routerLinkActive]="['router-link-active']">
+            <app-token [bgClass]="'warning'" [icon]="'fa-tasks'" [count]="12" [label]="'Trips'" ></app-token>
+        </a>
+    </div>
+    <div class="col-xl-3 col-lg-6">
+        <a routerLink="/home/drivers" [routerLinkActive]="['router-link-active']">
+            <app-token [bgClass]="'success'" [icon]="'fa-support'" [count]="124" [label]="'Drivers'" ></app-token>
+        </a>
+    </div>
+    <div class="col-xl-3 col-lg-6">
+        <a routerLink="/home/guests" [routerLinkActive]="['router-link-active']">
+            <app-token [bgClass]="'danger'" [icon]="'fa-user'" [count]="13" [label]="'Guests'"></app-token>
+        </a>
+    </div>
+</div>
